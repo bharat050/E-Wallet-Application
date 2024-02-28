@@ -19,4 +19,9 @@ public class UserController {
     public User getUser(@PathVariable("name") String name){
         return userService.getUser(name);
     }
+
+    @GetMapping("/getEmail/{name}")
+    public UserResponseDto getEmailDetailsByName(@PathVariable("name") String name){
+        return userService.getEmailDetailsByName(name);
+    }
 }

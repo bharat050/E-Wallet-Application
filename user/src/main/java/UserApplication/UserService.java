@@ -28,7 +28,8 @@ public class UserService {
         User user = User.builder()
                 .age(userRequestDto.getAge())
                 .name(userRequestDto.getName())
-                .mobileNo(userRequestDto.getMobileNo()).build();
+                .mobileNo(userRequestDto.getMobileNo())
+                .email(userRequestDto.getEmail()).build();
 
         userRepository.save(user);
 
@@ -66,5 +67,13 @@ public class UserService {
         redisTemplate.opsForHash().putAll(key, map);
 
         redisTemplate.expire(key, Duration.ofHours(12));
+    }
+
+    public UserResponseDto getEmailDetailsByName(String name) {
+        User user = userRepository.findByName(name);
+        UserResponseDto userResponseDto = UserResponseDto.builder()
+                .name(user.getName()).email(user.getEmail()).build();
+
+        return userResponseDto;
     }
 }

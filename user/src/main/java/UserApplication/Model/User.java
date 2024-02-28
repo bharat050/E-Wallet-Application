@@ -19,7 +19,7 @@ public class User {
 
     @Column(unique = true)
     private String name;
-
+    private String email;
     private String mobileNo;
     private int age;
 }

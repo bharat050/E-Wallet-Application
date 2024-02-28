@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserRequestDto {
+public class UserResponseDto {
 
     private String name;
-    private String mobileNo;
-    private int age;
     private String email;
 }

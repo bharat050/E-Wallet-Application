@@ -14,6 +14,8 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +46,7 @@ public class Config {
 
         return redisTemplate;
     }
-
+    @Bean
     ObjectMapper getMapping(){
         return new ObjectMapper();
     }
@@ -89,5 +91,10 @@ public class Config {
         ConcurrentKafkaListenerContainerFactory concurrentKafkaListenerContainerFactory = new ConcurrentKafkaListenerContainerFactory();
         concurrentKafkaListenerContainerFactory.setConsumerFactory(getConsumerFactory());
         return concurrentKafkaListenerContainerFactory;
+    }
+
+    @Bean
+    RestTemplate getRestTemplate(){
+        return  new RestTemplate();
     }
 }

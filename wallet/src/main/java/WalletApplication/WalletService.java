@@ -25,9 +25,9 @@ public class WalletService {
         walletRepository.save(wallet);
     }
 
-    @KafkaListener(topics = "update_wallet", groupId = "User_wallet")
+    @KafkaListener(topics = "update_wallet", groupId = "User_Wallet")
     public void updateWalletFromTransaction(String message) throws JsonProcessingException {
-        JSONObject jsonObject = objectMapper.convertValue(message, JSONObject.class);
+        JSONObject jsonObject = objectMapper.readValue(message, JSONObject.class);
 
         //retrieving attributes from Object
         String fromUser = jsonObject.get("fromUser").toString();
@@ -37,7 +37,7 @@ public class WalletService {
 
         // object to be returned back along with status of transaction
         JSONObject returnObject = new JSONObject();
-        jsonObject.put("transactionId", transactionId);
+        returnObject.put("transactionId", transactionId);
 
         // finding which wallet needs to be updated.
         Wallet fromUserWallet = walletRepository.findByUserName(fromUser);
@@ -47,15 +47,15 @@ public class WalletService {
             fromUserWallet.setAmount(fromUserWallet.getAmount() - amount);
             toUserWallet.setAmount(toUserWallet.getAmount() + amount);
 
-            jsonObject.put("status", "SUCCESS");
-            kafkaTemplate.send("update_wallet", objectMapper.writeValueAsString(returnObject));
+            returnObject.put("status", "SUCCESS");
+            kafkaTemplate.send("update_transaction", objectMapper.writeValueAsString(returnObject));
 
             walletRepository.save(fromUserWallet);
             walletRepository.save(toUserWallet);
         }
         else{
-            jsonObject.put("status", "FAILED");
-            kafkaTemplate.send("update_wallet",objectMapper.writeValueAsString(returnObject));
+            returnObject.put("status", "FAILED");
+            kafkaTemplate.send("update_transaction",objectMapper.writeValueAsString(returnObject));
         }
     }
 
